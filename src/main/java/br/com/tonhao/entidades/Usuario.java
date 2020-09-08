@@ -1,5 +1,8 @@
 package br.com.tonhao.entidades;
 
+import lombok.Data;
+
+@Data
 public class Usuario {
 
 	private String nome;
