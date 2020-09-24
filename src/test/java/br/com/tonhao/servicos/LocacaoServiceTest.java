@@ -5,6 +5,8 @@ import br.com.tonhao.entidades.Locacao;
 import br.com.tonhao.entidades.Usuario;
 import br.com.tonhao.exception.FilmeSemEstoqueException;
 import br.com.tonhao.exception.LocadoraException;
+import br.com.tonhao.matchers.DiaSemanaMatcher;
+import br.com.tonhao.matchers.MatchersProprios;
 import br.com.tonhao.utils.DataUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.*;
@@ -186,7 +188,7 @@ public class LocacaoServiceTest {
         Usuario usuario = new Usuario("Jorget");
         List<Filme> filmes = Arrays.asList(new Filme("Piratas do Caribe", 2, 4.0),
                 new Filme("Senhor dos Aneis", 5, 4.0),
-                new Filme("O Livro de Heli", 3, 4.0),
+                 new Filme("O Livro de Heli", 3, 4.0),
                 new Filme("Jack Rider", 3, 4.0),
                 new Filme("Velozes e Furiosos", 2, 4.0),
                 new Filme("Matrix", 1, 4.0));
@@ -213,8 +215,8 @@ public class LocacaoServiceTest {
         Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
 
 //        verificacao
-        boolean ehSegunga = DataUtils.verificarDiaSemana(resultado.getDataRetorno(), Calendar.MONDAY);
-        Assert.assertTrue(ehSegunga);
+        Assert.assertThat(resultado.getDataRetorno(), MatchersProprios.caiEm(Calendar.MONDAY));
+        Assert.assertThat(resultado.getDataRetorno(), MatchersProprios.caiNumaSegunda());
 
     }
 
