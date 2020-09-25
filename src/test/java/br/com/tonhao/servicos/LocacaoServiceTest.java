@@ -1,11 +1,12 @@
 package br.com.tonhao.servicos;
 
+import br.com.tonhao.builders.FilmeBuilder;
+import br.com.tonhao.builders.UsuarioBuilder;
 import br.com.tonhao.entidades.Filme;
 import br.com.tonhao.entidades.Locacao;
 import br.com.tonhao.entidades.Usuario;
 import br.com.tonhao.exception.FilmeSemEstoqueException;
 import br.com.tonhao.exception.LocadoraException;
-import br.com.tonhao.matchers.DiaSemanaMatcher;
 import br.com.tonhao.matchers.MatchersProprios;
 import br.com.tonhao.utils.DataUtils;
 import org.hamcrest.CoreMatchers;
@@ -52,19 +53,23 @@ public class LocacaoServiceTest {
         Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
         Assert.assertThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()), CoreMatchers.is(true));
         error.checkThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()), CoreMatchers.is(true));
+        error.checkThat(locacao.getDataLocacao(), MatchersProprios.ehHoje());
 
         Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
         Assert.assertThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)),
                 CoreMatchers.is(true));
         error.checkThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)),
                 CoreMatchers.is(true));
+        error.checkThat(locacao.getDataRetorno(), MatchersProprios.ehHojeComDiferencaDias(1));
     }
 
     @Test(expected = Exception.class)
     public void deveFazerLocacaoSemEstoque() throws Exception {
 //        cenario
-        Usuario usuario = new Usuario("Jorget");
-        List<Filme> filmes = Arrays.asList(new Filme("Equilibriun", 0, 5.0));
+//        Usuario usuario = new Usuario("Jorget");
+        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+//        List<Filme> filmes = Arrays.asList(new Filme("Equilibriun", 0, 5.0));
+        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().novo());
 
 //        acao
         locacaoService.alugarFilme(usuario, filmes);
