@@ -19,7 +19,7 @@ public class FilmeBuilder {
 
     }
 
-    public Filme novo() {
+    public Filme agora() {
         return filme;
     }
 

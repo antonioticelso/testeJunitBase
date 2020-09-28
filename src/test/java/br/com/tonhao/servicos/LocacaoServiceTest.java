@@ -1,7 +1,9 @@
 package br.com.tonhao.servicos;
 
 import br.com.tonhao.builders.FilmeBuilder;
+import br.com.tonhao.builders.LocacaoBuilder;
 import br.com.tonhao.builders.UsuarioBuilder;
+import br.com.tonhao.daos.LocacaoDao;
 import br.com.tonhao.entidades.Filme;
 import br.com.tonhao.entidades.Locacao;
 import br.com.tonhao.entidades.Usuario;
@@ -13,6 +15,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -22,6 +25,9 @@ import java.util.List;
 public class LocacaoServiceTest {
 
     private LocacaoService locacaoService;
+    private SPCService spc;
+    private LocacaoDao dao;
+    private EmailService email;
 
     @Rule
     public ErrorCollector error = new ErrorCollector();
@@ -31,8 +37,15 @@ public class LocacaoServiceTest {
 
     @Before
     public void setup() {
-//        System.out.println("Before");
         locacaoService = new LocacaoService();
+        dao = Mockito.mock(LocacaoDao.class);
+        locacaoService.setLocacaoDao(dao);
+
+        spc = Mockito.mock(SPCService.class);
+        locacaoService.setSPCService(spc);
+
+        email = Mockito.mock(EmailService.class);
+        locacaoService.setEmailService(email);
     }
 
     @Test
@@ -69,7 +82,7 @@ public class LocacaoServiceTest {
 //        Usuario usuario = new Usuario("Jorget");
         Usuario usuario = UsuarioBuilder.umUsuario().agora();
 //        List<Filme> filmes = Arrays.asList(new Filme("Equilibriun", 0, 5.0));
-        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().novo());
+        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
 
 //        acao
         locacaoService.alugarFilme(usuario, filmes);
@@ -225,4 +238,30 @@ public class LocacaoServiceTest {
 
     }
 
+    @Test
+    public void naoAlugaFilmeParaClienteNegativado() throws FilmeSemEstoqueException, LocadoraException {
+        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
+
+        Mockito.when(spc.possuiNegativacao(usuario)).thenReturn(true);
+
+//        exception.expect(LocadoraException.class);
+//        exception.expectMessage("Cliente Negativado por exesso de pagamento.");
+
+//        locacaoService.alugarFilme(usuario, filmes);
+
+    }
+
+
+    @Test
+    public void deveEnviaremailPorAtraso() {
+        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        List<Locacao> locacoes = Arrays.asList(LocacaoBuilder.umaLocacao().comUsuario(usuario).comDataRetorno(DataUtils.obterDataComDiferencaDias(2)).agora());
+
+        Mockito.when(dao.obterLocacoesPendentes()).thenReturn(locacoes);
+
+        locacaoService.notificarAtrasos();
+
+        Mockito.verify(email).notificarAtraso(usuario);
+    }
 }

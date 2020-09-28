@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.tonhao.daos.LocacaoDao;
 import br.com.tonhao.entidades.Filme;
 import br.com.tonhao.entidades.Locacao;
 import br.com.tonhao.entidades.Usuario;
@@ -12,6 +13,11 @@ import br.com.tonhao.exception.LocadoraException;
 import br.com.tonhao.utils.DataUtils;
 
 public class LocacaoService {
+
+	private LocacaoDao dao;
+	private SPCService spcService;
+	private EmailService emailService;
+
 	
 	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeSemEstoqueException, LocadoraException {
 		if (usuario == null) {
@@ -26,6 +32,10 @@ public class LocacaoService {
 			if (filme.getEstoque() == 0) {
 				throw new FilmeSemEstoqueException("Filme sem estoque.");
 			}
+		}
+
+		if (spcService.possuiNegativacao(usuario)) {
+			throw new LocadoraException("Cliente Negativado por exesso de pagamento.");
 		}
 
 		Locacao locacao = new Locacao();
@@ -58,12 +68,29 @@ public class LocacaoService {
 		locacao.setDataRetorno(dataEntrega);
 		
 		//Salvando a locacao...	
-		//TODO adicionar método para salvar
-		
+
+		dao.salvar(locacao);
+
 		return locacao;
 	}
 
-	public static void main(String[] args) {
-		
+	public void notificarAtrasos() {
+		List<Locacao> locacoes = dao.obterLocacoesPendentes();
+		for (Locacao locacao: locacoes) {
+			emailService.notificarAtraso(locacao.getUsuario());
+		}
+	}
+
+	public void setLocacaoDao(LocacaoDao dao) {
+		this.dao = dao;
+	}
+
+
+	public void setSPCService(SPCService spc) {
+		spcService = spc;
+	}
+
+	public void setEmailService(EmailService email) {
+		emailService = email;
 	}
 }

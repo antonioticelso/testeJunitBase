@@ -1,5 +1,6 @@
 package br.com.tonhao.servicos;
 
+import br.com.tonhao.daos.LocacaoDao;
 import br.com.tonhao.entidades.Filme;
 import br.com.tonhao.entidades.Locacao;
 import br.com.tonhao.entidades.Usuario;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,6 +21,8 @@ import java.util.List;
 @RunWith(Parameterized.class)
 public class CalculoValorLocacaoTest {
     private LocacaoService locacaoService;
+    private SPCService spc;
+    private LocacaoDao dao;
 
     @Parameterized.Parameter
     public List<Filme> filmes;
@@ -32,6 +36,14 @@ public class CalculoValorLocacaoTest {
     @Before
     public void setup() {
         locacaoService = new LocacaoService();
+
+        dao = Mockito.mock(LocacaoDao.class);
+        locacaoService.setLocacaoDao(dao);
+
+        spc = Mockito.mock(SPCService.class);
+        locacaoService.setSPCService(spc);
+
+
     }
 
     private static Filme filme1 = new Filme("Piratas do Caribe", 2, 4.0);
