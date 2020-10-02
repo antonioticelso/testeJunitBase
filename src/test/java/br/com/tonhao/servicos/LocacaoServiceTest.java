@@ -15,7 +15,10 @@ import org.hamcrest.CoreMatchers;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -24,9 +27,13 @@ import java.util.List;
 
 public class LocacaoServiceTest {
 
+    @InjectMocks
     private LocacaoService locacaoService;
+    @Mock
     private SPCService spc;
+    @Mock
     private LocacaoDao dao;
+    @Mock
     private EmailService email;
 
     @Rule
@@ -37,15 +44,16 @@ public class LocacaoServiceTest {
 
     @Before
     public void setup() {
-        locacaoService = new LocacaoService();
-        dao = Mockito.mock(LocacaoDao.class);
-        locacaoService.setLocacaoDao(dao);
-
-        spc = Mockito.mock(SPCService.class);
-        locacaoService.setSPCService(spc);
-
-        email = Mockito.mock(EmailService.class);
-        locacaoService.setEmailService(email);
+        MockitoAnnotations.initMocks(this);
+//        locacaoService = new LocacaoService();
+//        dao = Mockito.mock(LocacaoDao.class);
+//        locacaoService.setLocacaoDao(dao);
+//
+//        spc = Mockito.mock(SPCService.class);
+//        locacaoService.setSPCService(spc);
+//
+//        email = Mockito.mock(EmailService.class);
+//        locacaoService.setEmailService(email);
     }
 
     @Test
@@ -250,6 +258,7 @@ public class LocacaoServiceTest {
 
 //        locacaoService.alugarFilme(usuario, filmes);
 
+//        Mockito.verify(spc).possuiNegativacao(usuario);
     }
 
 

@@ -12,7 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,8 +23,12 @@ import java.util.List;
 
 @RunWith(Parameterized.class)
 public class CalculoValorLocacaoTest {
+
+    @InjectMocks
     private LocacaoService locacaoService;
+    @Mock
     private SPCService spc;
+    @Mock
     private LocacaoDao dao;
 
     @Parameterized.Parameter
@@ -35,14 +42,7 @@ public class CalculoValorLocacaoTest {
 
     @Before
     public void setup() {
-        locacaoService = new LocacaoService();
-
-        dao = Mockito.mock(LocacaoDao.class);
-        locacaoService.setLocacaoDao(dao);
-
-        spc = Mockito.mock(SPCService.class);
-        locacaoService.setSPCService(spc);
-
+        MockitoAnnotations.initMocks(this);
 
     }
 

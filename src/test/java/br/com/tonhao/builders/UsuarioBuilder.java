@@ -19,4 +19,10 @@ public class UsuarioBuilder {
     public Usuario agora() {
         return usuario;
     }
+
+    public UsuarioBuilder comNome(String param) {
+        usuario.setNome(param);
+        return this;
+    }
+
 }
