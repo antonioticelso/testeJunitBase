@@ -1,0 +1,24 @@
+{
+  "name": "testfrontend",
+  "version": "1.0.0",
+  "description": "FrontEnd-Test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jasmine",
+    "karma"
+  ],
+  "author": "Tonhao",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.8.1",
+    "angular-mocks": "^1.8.1",
+    "angular-ui-router": "^1.0.28",
+    "jasmine-core": "^3.6.0",
+    "karma": "^5.2.3",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^4.0.1"
+  }
+}

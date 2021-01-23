@@ -273,4 +273,17 @@ public class LocacaoServiceTest {
 
         Mockito.verify(email).notificarAtraso(usuario);
     }
+
+//    @Test
+//    public void deveTratarErroNoSPC() throws FilmeSemEstoqueException, LocadoraException {
+//        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+//        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
+//
+//        Mockito.when(spc.possuiNegativacao(usuario)).thenReturn(new Exception(""))
+//
+//        locacaoService.alugarFilme(usuario, filmes);
+//
+//    }
+
+
 }
